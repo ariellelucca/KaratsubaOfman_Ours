@@ -5,8 +5,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity KaratsubaOfman is
     Generic(
-	Size  : natural := 8;
-	WSize : natural := 4
+	Size  : natural := 16;
+	WSize : natural := 8
     );
     Port ( 
         i_X    : in STD_LOGIC_VECTOR(Size-1 downto 0);
@@ -78,7 +78,7 @@ architecture RecursiveArchitecture of KaratsubaOfman is
     w_LY <= i_Y(Size/2-1 downto 0);
 
     Termination: if Size <= WSize generate
-	VEDIC4X4: entity work.VedicMult4x4
+	VEDIC8X8: entity work.VedicMult8x8
           port map(
             i_A    => i_X,
             i_B    => i_Y,

@@ -9,7 +9,7 @@ entity VedicMult8x8 is
     Port ( 
         i_A  : in STD_LOGIC_VECTOR(7 downto 0);
         i_B  : in STD_LOGIC_VECTOR(7 downto 0);
-	o_AB : out STD_LOGIC_VECTOR(16 downto 0)
+	o_AB : out STD_LOGIC_VECTOR(15 downto 0)
     );
 end VedicMult8x8;
 
@@ -20,7 +20,7 @@ architecture Behavioral of VedicMult8x8 is
 
   signal w_R1   : t_P;
 
-  signal w_AB1  : STD_LOGIC_VECTOR(16 downto 0) := (others => '0');
+  signal w_AB1  : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
   begin
 
@@ -172,7 +172,7 @@ architecture Behavioral of VedicMult8x8 is
 	w_R1(14)(2 downto 0)   <= "000" + (i_A(7 downto 7) * i_B(7 downto 7)) + -- 1
 			     	  "000" + w_R1(13)(2 downto 1);
 
-	w_AB1(16 downto 14)  <= w_R1(14)(2 downto 0);
+	w_AB1(15 downto 14)  <= w_R1(14)(1 downto 0);
 
 -- FINAL
 	o_AB <= w_AB1;
