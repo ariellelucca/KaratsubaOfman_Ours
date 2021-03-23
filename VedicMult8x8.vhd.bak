@@ -20,7 +20,7 @@ architecture Behavioral of VedicMult8x8 is
 
   signal w_R1   : t_P;
 
-  signal w_AB1  : STD_LOGIC_VECTOR(16 downto 0) := (others => '0');
+  signal w_AB1  : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
   begin
 

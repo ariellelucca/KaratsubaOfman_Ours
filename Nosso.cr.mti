@@ -83,18 +83,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling architecture Behavioral of Adder
 -- Loading entity FullAdder
 
-} {} {}} C:/_FILES/VHDL/Nosso/Karatsuba_TBE.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/_FILES/VHDL/Nosso/Karatsuba_TBE.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package NUMERIC_STD
--- Compiling entity Karatsuba_TBE
--- Compiling architecture arch_1 of Karatsuba_TBE
--- Loading entity KaratsubaOfman
-
 } {} {}} C:/_FILES/VHDL/Nosso/ShiftnAdder.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/_FILES/VHDL/Nosso/ShiftnAdder.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD

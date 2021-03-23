@@ -5,8 +5,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Karatsuba_TBE is
     Generic(
-	Size  : natural := 16;
-	WSize : natural := 8
+	Size  : natural := 64;
+	WSize : natural := 4
     );
 end Karatsuba_TBE;
 
@@ -35,10 +35,9 @@ process
 begin
 
 w_RSTn <= '1';
-w_X <= "0001110100000000";
-w_Y <= "1110101100000000";
+w_X <= "0001110100000000000111010000000000011101000000000001110100000000";
+w_Y <= "1110101100000000111010110000000011101011000000001110101100000000";
 
-wait for 1 ns;
 w_CLK <= '1';
 wait for 1 ns;
 w_CLK <= '0';
@@ -90,7 +89,6 @@ wait for 1 ns;
 w_CLK <= '1';
 wait for 1 ns;
 w_CLK <= '0';
-
 
 end process;
 
