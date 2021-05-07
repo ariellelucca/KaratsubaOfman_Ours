@@ -73,9 +73,9 @@ architecture Behavioral of ShiftnAdder is
 
     -- Computes the sum S as SXl+ SYl,SXl,SYl
     w_S <= (w_CX & w_ADD1_X) when (i_CX = '1' AND i_CY = '1') else 
-               '0'&i_SXL when (i_CX = '0' AND i_CY = '1') else
-               '0'&i_SYL when (i_CX = '1' AND i_CY= '0') else
-               (others => '0');
+           '0'&i_SXL when (i_CX = '0' AND i_CY = '1') else
+           '0'&i_SYL when (i_CX = '1' AND i_CY= '0') else
+           (others => '0');
    
     -- T represents CarryX(CX). CarryY(CY)
     w_T <= i_CX AND i_CY;
