@@ -5,7 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity KaratsubaOfman is
     Generic(
-	Size  : natural := 64;
+	Size  : natural := 32;
 	WSize : natural := 4
     );
     Port ( 
@@ -77,18 +77,44 @@ architecture RecursiveArchitecture of KaratsubaOfman is
     w_LX <= i_X(Size/2-1 downto 0);
     w_LY <= i_Y(Size/2-1 downto 0);
 
-    Termination: if Size <= WSize generate
-	    VEDIC4X4: entity work.VedicMult4x4
-         port map(
-            i_A    => i_X,
-            i_B    => i_Y,
-	    o_AB   => o_XY
-         );
+    -- Selects the Vedic multiplier based on the size of WSize
+    -- Case WSize = 4, generates VEDIC4X4 
+    Termination4: if Size <= WSize and WSize = 4 generate
+        VEDIC4X4: entity work.VedicMult4x4
+            port map(
+		i_A    => i_X,
+		i_B    => i_Y,
+		o_AB   => o_XY
+	    );
+    end generate Termination4;
 
-	    -- o_XY <= i_X * i_Y;
-    end generate Termination;
+    -- Case WSize = 8, generates VEDIC8X8     
+    Termination8: if Size <= WSize and WSize = 8 generate
+	VEDIC8X8: entity work.VedicMult8x8
+	    port map(
+		i_A    => i_X,
+		i_B    => i_Y,
+		o_AB   => o_XY
+	    );
+    end generate Termination8;
+    
+    -- Case WSize = 16, generates VEDIC16X16
+    Termination16: if Size <= WSize and WSize = 16 generate
+	VEDIC16X16: entity work.VedicMult16x16
+	    port map(
+		i_A    => i_X,
+		i_B    => i_Y,
+		o_AB   => o_XY
+	    );
+    end generate Termination16;
 
-      ADDl: entity work.Adder
+
+	
+    -- Recursive KOA calls
+    Recursion: if Size > WSize generate
+    
+    -- XH and XL adder
+    ADDl: entity work.Adder
         generic map ( 
           p_K => Size/2
         )
@@ -98,9 +124,10 @@ architecture RecursiveArchitecture of KaratsubaOfman is
           i_CARRY => w_CIX,
           o_XX    => w_ADD1_X, 
 	  o_CARRY => w_CX
-        );
+    );
 
-       ADD2: entity work.Adder
+    -- YH and YL adder
+    ADD2: entity work.Adder
         generic map ( 
           p_K => Size/2
         )
@@ -110,11 +137,11 @@ architecture RecursiveArchitecture of KaratsubaOfman is
           i_CARRY => w_CIY,
           o_XX    => w_ADD2_Y, 
 	  o_CARRY => w_CY
-        );
+    );
+	
 
-    Recursion: if Size > WSize generate
-
-       KO1: entity work.KaratsubaOfman
+    -- First recursive call that multiplies XH and YH
+    KOA1: entity work.KaratsubaOfman
          generic map (
            Size => Size/2
          )
@@ -124,10 +151,11 @@ architecture RecursiveArchitecture of KaratsubaOfman is
           i_CLK => i_CLK,
           i_RSTn => i_RSTn,
           o_XY   => w_P1
-       );
+    );
 
 
-       KO2: entity work.KaratsubaOfman
+    -- Second recursive call that multiplies XL and YL
+    KOA2: entity work.KaratsubaOfman
          generic map (
            Size => Size/2
          )
@@ -137,22 +165,24 @@ architecture RecursiveArchitecture of KaratsubaOfman is
 	  i_CLK => i_CLK,
           i_RSTn => i_RSTn,
           o_XY   => w_P2
-        );
+    );
 
 
-       KO3: entity work.KaratsubaOfman
+    -- Thirs recursive call that multiplies XH+XL (w_ADD1_X) and YH+XL (w_ADD2_Y)
+    KO3: entity work.KaratsubaOfman
          generic map (
            Size => Size/2
          )
          port map (
           i_X    => w_ADD1_X,
           i_Y    => w_ADD2_Y,
-	  i_CLK => i_CLK,
+	  i_CLK  => i_CLK,
           i_RSTn => i_RSTn,
           o_XY   => w_P3
-        );
-
-       SA: entity work.ShiftnAdder
+    );
+    
+    
+    SA: entity work.ShiftnAdder
          generic map (
            p_K => Size/2
          )
@@ -165,10 +195,10 @@ architecture RecursiveArchitecture of KaratsubaOfman is
           i_CY       => w_CY,
 	  i_P        => w_P3,
           o_PRODUCT3 => w_PRODUCT3
-        );
+    );
 
-       -- REG SA�DA
-       SSA: entity work.ShifterSubnAdder
+
+    SSA: entity work.ShifterSubnAdder
          generic map (
            p_K => Size/2
          )
@@ -179,7 +209,7 @@ architecture RecursiveArchitecture of KaratsubaOfman is
           i_PRODUCT2 => w_P2,
 	  i_PRODUCT3 => w_PRODUCT3,
           o_XY       => o_XY
-        );
+    );
 
 
     end generate Recursion;
